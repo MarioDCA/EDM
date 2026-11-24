@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="eo">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tibor Sekelj – homo, kiun pelis scivolemo</title>
+<style>
+:root{--bg:#101b2b;--panel:#18283d;--cream:#f5f0e6;--muted:#b9c4d2;--orange:#f0a34a;--teal:#6fc2b3;--line:rgba(255,255,255,.14)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:Arial,Helvetica,sans-serif}
+body{overflow:hidden}
+.deck{height:100%;display:flex;flex-direction:column}
+.top{height:7px;background:#26384e;flex:none}
+.progress{height:7px;width:0;background:var(--orange);transition:width .25s}
+.stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:clamp(18px,4vw,58px);overflow:auto}
+.slide{display:none;width:min(1120px,100%);min-height:min(650px,100%);animation:fade .25s ease}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+@keyframes fade{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:none}}
+.kicker{color:var(--teal);text-transform:uppercase;letter-spacing:.14em;font-size:clamp(16px,1.5vw,22px);font-weight:bold;margin-bottom:18px}
+.kicker-tight{margin-bottom:8px}
+h1{font-size:clamp(42px,7vw,86px);line-height:.98;letter-spacing:-.045em;margin:0 0 22px;max-width:900px}
+h2{font-size:clamp(30px,4.3vw,54px);line-height:1.05;letter-spacing:-.03em;margin:0 0 22px}
+h3{font-size:clamp(18px,2vw,24px);margin:0 0 10px;color:var(--orange)}
+p{font-size:clamp(17px,1.7vw,22px);line-height:1.48;color:#e7eaf0;margin:0 0 15px;max-width:850px}
+.lead{font-size:clamp(17px,1.65vw,22px);line-height:1.42;color:#fff;max-width:950px}
+.small{font-size:14px;color:var(--muted);line-height:1.45}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.card p{font-size:clamp(15px,1.35vw,19px);margin:0;color:#dce3eb}
+.big-number{font-size:clamp(34px,5vw,58px);font-weight:800;color:var(--orange);line-height:1;margin-bottom:8px}
+.pill{display:inline-block;border:1px solid rgba(111,194,179,.55);color:var(--teal);padding:7px 11px;border-radius:30px;font-size:13px;margin:5px 6px 0 0}
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center}
+.two-aconcagua{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center}
+.two-book{display:grid;grid-template-columns:1.12fr .88fr;gap:28px;align-items:stretch}
+.book-media-col{display:flex;flex-direction:column;justify-content:flex-end}
+.aconcagua-gallery-page{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%}
+.aconcagua-gallery-page img{width:100%;height:260px;object-fit:cover;background:#0c1420;border-radius:14px;border:1px solid var(--line)}
+.buenos-gallery-page{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%}
+.buenos-gallery-page img{width:100%;height:265px;object-fit:cover;background:#0c1420;border-radius:14px;border:1px solid var(--line)}
+.gallery-footer-label{text-align:center;margin-top:16px;font-size:clamp(16px,1.5vw,20px);color:var(--muted);letter-spacing:.04em}
+.who-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}
+.who-gallery img{width:100%;height:220px;object-fit:cover;background:#0c1420;border-radius:16px;border:1px solid var(--line)}
+.who-gallery img.mirror-x{transform:scaleX(-1)}
+.portrait{width:min(100%,330px);max-height:430px;object-fit:cover;object-position:center;border-radius:18px;border:1px solid var(--line);filter:grayscale(100%)}
+.photo-box{background:var(--panel);border:1px dashed rgba(111,194,179,.55);border-radius:18px;padding:18px;text-align:center}
+.photo-box img{width:100%;max-height:330px;object-fit:contain;background:#0c1420;border-radius:12px;border:1px solid var(--line)}
+.photo-box-lg{padding:16px}
+.photo-box-lg img{max-height:460px}
+.photo-box-book{width:fit-content;max-width:100%;margin:0 auto;padding:10px 12px;border-radius:14px}
+.photo-box-book img{width:auto;max-width:100%;max-height:450px}
+.photo-box-book-tall{display:flex;flex-direction:column;justify-content:space-between;height:100%}
+.photo-box-book-tall img{flex:1;min-height:0;max-height:540px;object-fit:contain}
+.photo-placeholder{min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;background:rgba(255,255,255,.03);border-radius:12px;color:var(--muted)}
+.photo-placeholder b{color:var(--teal);font-size:16px}
+.caption{font-size:12px;color:var(--muted);margin-top:8px}
+.quote{font-size:clamp(25px,3.5vw,42px);line-height:1.25;max-width:900px;color:#fff;border-left:5px solid var(--orange);padding-left:25px}
+.quote small{display:block;font-size:15px;color:var(--muted);margin-top:20px}
+.links a{color:#ffd08f;text-decoration:underline;text-underline-offset:3px}
+.links li{font-size:clamp(16px,1.6vw,20px);line-height:1.5;margin:9px 0;color:#e7eaf0}
+.video-stack{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.card-video{padding:12px 16px;border-radius:14px}
+.card-video h3{font-size:16px;margin:0 0 4px}
+.card-video p{font-size:14px;line-height:1.35;margin:0}
+.card-video p+p{margin-top:2px}
+.card-video .small{font-size:12.5px;line-height:1.3}
+ul{padding-left:23px;margin:8px 0}
+.note{margin-top:20px}
+
+/* Mreža naslovnic knjig */
+.books-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:16px}
+.book-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;justify-content:space-between}
+.book-card img{width:100%;height:190px;object-fit:contain;background:#0c1420;border-radius:8px;margin-bottom:10px}
+.book-title{font-size:14px;font-weight:bold;color:var(--cream);line-height:1.3}
+.book-sub{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+
+/* Predal za hiter pregled diapozitivov */
+.drawer{position:fixed;inset:0;background:rgba(9,16,26,.82);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:24px;z-index:40}
+.drawer.open{display:flex}
+.drawer-panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;width:min(860px,100%);max-height:82vh;overflow:auto;padding:24px}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.drawer-head h3{margin:0;color:var(--cream)}
+.toc-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.toc-item{text-align:left;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:baseline;cursor:pointer}
+.toc-item b{color:var(--orange);font-variant-numeric:tabular-nums;min-width:22px}
+.toc-item span{color:var(--cream);font-size:14px}
+.toc-item.active{border-color:var(--orange);background:rgba(240,163,74,.12)}
+
+.footer{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-top:1px solid var(--line);flex:none;gap:12px}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button{background:#24364d;border:1px solid var(--line);color:var(--cream);padding:10px 15px;border-radius:10px;cursor:pointer;font-size:14px}
+button:hover:not(:disabled){background:#304761}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--orange);color:#172235;border-color:var(--orange);font-weight:bold}
+.counter{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px;min-width:72px;text-align:center}
+.dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.dot{width:8px;height:8px;padding:0;border:0;border-radius:50%;background:#526277}
+.dot.active{background:var(--orange);transform:scale(1.35)}
+.shortcuts{font-size:12px;color:var(--muted)}
+
+@media(max-width:980px){
+ .books-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:850px){
+ .grid-3{grid-template-columns:1fr}
+ .toc-list{grid-template-columns:1fr}
+ .aconcagua-gallery-page{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+ .stage{align-items:flex-start;padding:22px 18px}
+ .slide{min-height:0}
+ .grid,.two,.two-aconcagua,.two-book{grid-template-columns:1fr}
+ .aconcagua-gallery-page,.buenos-gallery-page{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .aconcagua-gallery-page img,.buenos-gallery-page img{height:160px}
+ .who-gallery img{height:170px}
+ .books-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .portrait{width:160px;max-height:210px}
+ .photo-box-lg img{max-height:300px}
+ .photo-box-book{width:100%}
+ .photo-box-book img{max-height:320px}
+ .photo-box-book-tall{height:auto}
+ .photo-box-book-tall img{max-height:380px}
+ .footer{height:auto;min-height:62px;padding:10px;gap:8px;flex-wrap:wrap}
+ .dots{order:3;width:100%}
+ .shortcuts{display:none}
+}
+@media print{
+ html,body{height:auto;overflow:visible;background:white;color:#111}
+ .deck{height:auto}.top,.footer,.drawer{display:none!important}
+ .stage{display:block;padding:0;overflow:visible}
+ .slide,.slide.active{display:flex!important;min-height:95vh;page-break-after:always;background:#101b2b;color:white;padding:35px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+ <div class="top"><div class="progress" id="progress"></div></div>
+ <main class="stage" id="stage" tabindex="-1">
+  <!-- 1 -->
+  <section class="slide active" data-title="Titolpaĝo">
+   <div class="kicker">Vivo survoje · 1912–1988</div>
+   <h1>Tibor<br>Sekelj</h1>
+   <p class="lead">Homo, kiun pelis scivolemo – esploristo, verkisto, vojaĝanto kaj esperantisto.</p>
+   </section>
+
+  <!-- 2 -->
+  <section class="slide" data-title="Rimarko de la prelegonto">
+   <div class="kicker">Rimarko de la prelegonto</div>
+   <h2>De la datreveno al la hodiaŭa elekto</h2>
+   <p class="lead">La unuan prezenton pri Tibor Sekelj mi preparis antaŭ 14 jaroj, je la 100-a datreveno de lia naskiĝo. Tiu prezento servis kiel bazo, tamen mi ĝin grandparte ŝanĝis.</p>
+   <div class="card" style="margin-top:14px">
+    <h3>Tiom da diversaj flankoj de unu vivo</h3>
+    <p style="margin-bottom:10px">La vivo de Sekelj estis tiel riĉa, ke oni povus prepari multajn memstarajn prezentojn – interalie pri li kiel:</p>
+    <p style="font-size:clamp(15px,1.4vw,18px);color:var(--orange);font-weight:bold">geografo, ĵurnalisto, filmisto, alpinisto, etnologo, aventuristo, politika aktivulo, poliglotulo, esperantisto, edukisto, artisto, verkisto kaj ankoraŭ aliaj.</p>
+   </div>
+   <p class="small note">Hodiaŭ mi elstarigos nur kelkajn el tiuj flankoj – laŭ propra elekto.</p>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" data-title="Kiu li estis?">
+   <div class="two">
+    <div>
+     <div class="kicker kicker-tight">Kiu li estis?</div>
+     <h2>Pli ol vojaĝanto</h2>
+     <p class="lead">Tibor Sekelj (1912–1988) estis ĵurnalisto, esploristo, etnografo, verkisto, muzeisto kaj unu el la plej eminentaj esperantistoj de sia tempo.</p>
+     <p>Lian vivon markis konstantaj translokiĝoj kaj esplorado jam de frua infanaĝo, kio formis lin kiel mondcivitanon kaj poliglotulon.</p>
+    </div>
+    <div>
+     <div class="who-gallery">
+     <img src="Sekelj/Tibor_1.jpg" alt="" onerror="this.style.display='none';">
+     <img src="Sekelj/Tibor_2.jpg" alt="" onerror="this.style.display='none';">
+     <img src="Sekelj/Tibor_3.jpg" alt="" onerror="this.style.display='none';">
+     <img style="transform:scaleX(-1);" src="Sekelj/Tibor_4.jpg" alt="" onerror="this.style.display='none';">
+    </div>
+     <p class="small" style="margin-top:12px;text-align:center">Sekelj en kvar vivperiodoj</p>
+    </div>
+   </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" data-title="Naskiĝo kaj Cenei">
+   <div class="kicker">Junaĝo kaj radikoj</div>
+   <h2>La patro bestkuracisto kaj la unuaj dek jaroj en Cenei</h2>
+   <p class="lead">La patro de Tibor Sekelj estis bestkuracisto, la familio ofte translokiĝis.</p>
+   <div class="grid">
+    <div class="card">
+     <h3>Translokiĝo al Cenei</h3>
+     <p>Nur kelkajn monatojn post la naskiĝo de Tibor la familio ekloĝis en la urbo Cenei en la nuna Rumanio, kie Tibor vivis dum la unuaj dek jaroj de sia vivo.</p>
+    </div>
+    <div class="card">
+     <h3>Lingva medio</h3>
+     <p>La hejma lingvo estis la hungara, sur la strato oni parolis ankaŭ germanan dialekton.</p>
+    </div>
+   </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" data-title="Kikinda, Nikšić kaj Zagrebo">
+   <div class="kicker">Lernejaj jaroj kaj kreskado</div>
+   <h2>De Kikinda kaj Nikšić ĝis Zagrebo</h2>
+   <div class="grid">
+    <div class="card">
+     <h3>Kikinda (1922)</h3>
+     <p>La familio translokiĝis en 1922 al Kikinda (Кикинда), Serbio, Jugoslavio, kie Tibor lernis la serbokroatan; tiam li lernis ankaŭ la francan kaj eĉ instruis siajn samaĝulojn, estante nur kelkajn lecionojn antaŭ ili. Tiun lingvon li perfektigis ĉe franca instruistino; ekde tiam li lernis novan lingvon proksimume ĉiun kvaran jaron. En Kikinda li finis la bazlernejon.</p>
+    </div>
+    <div class="card">
+     <h3>Nikšić (1926) kaj Zagrebo (1929–1939)</h3>
+     <p>La familio en 1926 translokiĝis al Nikšić (Никшић), Montenegro, kie li finis la gimnazion. Jam en la mezlernejo li ekamis montgrimpadon kaj piede trairis la tutan Montenegron. En 1929 li enskribiĝis en la universitaton por studi juron en Zagrebo (Kroatio), kie en 1933 li diplomiĝis kiel unu el la tri plej junaj studentoj. En tiuj jaroj li lernis ankaŭ pentradon, skulptadon kaj ĵurnalistan laboron, per kiu li komencis vivteni sin. Interalie li lernis la internacian lingvon Esperanto. En 1937 li komencis labori en Zagrebo kiel filmdramaturgo.</p>
+    </div>
+   </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" data-title="Loĝlokoj">
+   <div class="two-book">
+    <div>
+     <div class="kicker kicker-tight">Mapo kaj jaroj</div>
+     <h2>Loĝlokoj</h2>
+     <p class="lead">Superrigardo de la lokoj, kie Tibor Sekelj vivis, lernis aŭ agadis inter 1912 kaj 1988.</p>
+     <div class="grid" style="margin-top:14px;gap:12px">
+      <div class="card">
+       <h3>Naskiĝo kaj fruaj jaroj</h3>
+       <p>Spišská Sobota (1912) kaj Cenei (1912–1922) kaj lernado en Kikinda (1922–1926), Nikšić (1926–1929) kaj Zagrebo (1929–1939).</p>
+      </div>
+      <div class="card">
+       <h3>Pli postaj periodoj</h3>
+       <p>Post la reveno el Sudameriko loĝado en Beogrado (1954–1972) kaj Subotico (1972–1988).</p>
+      </div>
+     </div>
+    </div>
+    <div class="book-media-col">
+     <div class="photo-box photo-box-book photo-box-book-tall">
+      <img src="Sekelj/Tibor_Sekelj_loĝlokoj_en_Eŭropo.png" alt="Loĝlokoj de Tibor Sekelj en Eŭropo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="photo-placeholder" style="display:none">
+       <b>Bildo ne troviĝas</b>
+       <span>Kontrolu, ĉu ekzistas dosiero <code>Sekelj/Tibor_Sekelj_loĝlokoj_en_Eŭropo.png</code> rilate al tiu ĉi HTML-dosiero.</span>
+      </div>
+      <div class="caption">Loĝlokoj de Tibor Sekelj en Eŭropo</div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" data-title="1939: foriro al Argentino">
+   <div class="kicker">Komenco de la vojo</div>
+   <h2>1939: foriro al Argentino</h2>
+   <p class="lead">Al Bonaero li iris kiel ĵurnalisto. Tie li restis proksimume dek kvin jarojn – kaj lia vivo fariĝis serio de ekspedicioj, esploroj kaj libroj.</p>
+   <div class="grid">
+    <div class="card"><div class="big-number">1939</div><h3>Bonaero</h3><p>Ĵurnalista laboro kaj studado de etnologio kaj arkeologio.</p></div>
+    <div class="card"><div class="big-number">~15</div><h3>Jaroj en Sudameriko</h3><p>Vojaĝoj tra Argentino, Brazilo, Bolivio kaj aliaj landoj de la kontinento.</p></div>
+   </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" data-title="Fotoj de Bonaero">
+   <div class="buenos-gallery-page">
+    <img src="Sekelj/Buenos_Aires_1940.jpg" alt="Bonaero – haveno kaj Luna Park" onerror="this.style.display='none';">
+    <img src="Sekelj/Argentina_02.jpg" alt="Bonaero – avenuo kun obelisko" onerror="this.style.display='none';">
+    <img src="Sekelj/Argentina_03.jpg" alt="Bonaero – viva strato" onerror="this.style.display='none';">
+    <img src="Sekelj/Argentina_04.jpg" alt="Bonaero – urba bruado" onerror="this.style.display='none';">
+   </div>
+   <div class="gallery-footer-label">Bonaero, Argentino, 1939, 1940</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" data-title="Aconcagua (1944)">
+   <div class="kicker">Montoj kaj provoj</div>
+   <h2>Historia ekspedicio sur Aconcagua (1944)</h2>
+   <div class="two-aconcagua">
+    <div>
+     <p class="lead">Supreniro sur la plej altan pinton de Sudameriko (alta je 6 961 metroj) kaj batalo kontraŭ perforta monta ŝtormo.</p>
+     <div class="grid" style="margin-top:14px;gap:12px">
+      <div class="card">
+       <h3>Supreniro sen antaŭa sperto</h3>
+       <p>En 1944 Sekelj aliĝis al ekspedicio sub gvido de la svisa alpinisto Georg Link. Kvankam li antaŭe ne havis pli grandan alpinisman sperton, la 13-an de februaro 1944 li kune kun la aŭstro Zechner kaj la italo Bertone atingis la pinton de la plej alta monto de Sudameriko.</p>
+      </div>
+      <div class="card">
+       <h3>Tragedio kaj savoperacio</h3>
+       <p>La ekspedicion trafis perforta neĝoŝtormo, en kiu mortis kvar el ses partoprenantoj. Dek unu monatojn poste Sekelj, laŭ iniciato de la argentina armeo, partoprenis duan ekspedicion, dum kiu estis trovitaj la kadavroj de la mortintaj grimpuloj.</p>
+      </div>
+     </div>
+    </div>
+    <div>
+     <div class="photo-box photo-box-book">
+      <img src="Sekelj/Sekelj_z_alpinistom_Zechnerjem.jpg" alt="Sekelj kun alpinisto Zechner kun Aconcagua en la fono" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="photo-placeholder" style="display:none">
+       <b>Bildo ne troviĝas</b>
+       <span>Kontrolu, ĉu ekzistas dosiero <code>Sekelj/Sekelj_z_alpinistom_Zechnerjem.jpg</code> rilate al tiu ĉi HTML-dosiero.</span>
+      </div>
+      <div class="caption">Sekelj kun alpinisto Zechner kun Aconcagua en la fono</div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" data-title="Ŝtormo super Aconcagua">
+   <div class="two-book">
+    <div>
+     <div class="kicker kicker-tight">Literatura debuto</div>
+     <h2>La libro Ŝtormo super Aconcagua</h2>
+     <p class="lead">La libro <i>Ŝtormo super Aconcagua</i> (en la hispana <i>Tempestad sobre el Aconcagua</i> estas la unua libro de Sekelj, en kiu li priskribis la eventojn de la Andoj-ekspedicio.</p>
+     <div class="grid" style="margin-top:14px;gap:12px">
+      <div class="card">
+       <h3>De monta dramo al libro</h3>
+       <p>La senpera sperto de danĝero, malvarmo kaj perdo en altmontaro kreskis en kortuŝan rakonton pri persistemo kaj alfrontado de naturaj fortoj.</p>
+      </div>
+      <div class="card">
+       <h3>Slovena eldono kaj signifo</h3>
+       <p>En la slovena ĝi aperis ĉe Mladinska knjiga en 1958 kaj estas rigardata kiel klasikaĵo de montara kaj vojaĝa literaturo.</p>
+      </div>
+     </div>
+    </div>
+    <div class="book-media-col">
+     <div class="photo-box photo-box-book photo-box-book-tall">
+      <img src="Sekelj/Tibor_Sekelj_Tempesta_sobre_el_Aconcagua.jpg" alt="Kovrilo de la libro Tempestad sobre el Aconcagua" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="photo-placeholder" style="display:none">
+       <b>Bildo ne troviĝas</b>
+       <span>Kontrolu, ĉu ekzistas dosiero <code>Sekelj/Tibor_Sekelj_Tempesta_sobre_el_Aconcagua.jpg</code> rilate al tiu ĉi HTML-dosiero.</span>
+      </div>
+      <div class="caption">Ŝtormo super Aconcagua en la originalo</div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" data-title="Fotoj de Aconcagua">
+   <div class="aconcagua-gallery-page">
+    <img src="Sekelj/Aconcagua_01.jpg" alt="" onerror="this.style.display='none';">
+    <img src="Sekelj/Aconcagua_02.jpg" alt="" onerror="this.style.display='none';">
+    <img src="Sekelj/Aconcagua_03.jpg" alt="" onerror="this.style.display='none';">
+    <img src="Sekelj/Aconcagua_04.jpg" alt="" onerror="this.style.display='none';">
+    <img src="Sekelj/Aconcagua_05.jpg" alt="" onerror="this.style.display='none';">
+    <img src="Sekelj/Aconcagua_08.jpg" alt="" onerror="this.style.display='none';">
+   </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" data-title="Ekspedicioj tra Ameriko (1939–1954)">
+   <div class="kicker">Ekspedicioj en Suda kaj Meza Ameriko</div>
+   <h2>Kie li estis en la jaroj 1939–1954</h2>
+   <p class="lead">Post la foriro al Sudameriko li trairis multajn regionojn kaj renkontis diversajn popolojn.</p>
+   <div class="grid">
+    <div class="card"><h3>1939–1945 · Argentino kaj Aconcagua</h3><p>Loĝado en Argentino kaj supreniro sur Aconcagua kaj Andoj-ekspedicioj.</p></div>
+    <div class="card"><h3>1946–1947 · Mato Grosso</h3><p>Esplorado de la brazila regiono Mato Grosso.</p></div>
+    <div class="card"><h3>1948–1949 · Bolivio kaj la popolo Ŝivaroj</h3><p>Vojaĝoj tra Bolivio kaj renkonto kun la popolo Ŝivaroj.</p></div>
+    <div class="card"><h3>1949–1951 kaj 1951–1954 · Venezuelo kaj Meza Ameriko</h3><p>En 1949–1951 en Venezuelo, poste en 1951–1954 ankoraŭ tra Meza Ameriko.</p></div>
+   </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" data-title="Ekspedicioj en Sudameriko kaj Amazonio">
+   <div class="kicker">Sudameriko · 1939–1954</div>
+   <h2>Tibor Sekelj inter la tribaj popoloj</h2>
+   <div class="aconcagua-gallery-page" style="margin-top:12px;grid-template-columns:repeat(2,minmax(0,1fr))">
+    <img src="Sekelj/01-tibor-sekelj_amazonija.jpg" alt="Tibor Sekelj – Amazonio" style="height:300px;object-fit:contain" onerror="this.style.display='none';">
+    <img src="Sekelj/03-tibor-sekelj_amazonija.jpg" alt="Tibor Sekelj" style="height:300px;object-fit:contain" onerror="this.style.display='none';">
+   </div>
+   <div class="gallery-footer-label">Amazonio</div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide" data-title="Reveno al Jugoslavio (1954)">
+   <div class="kicker">Reveno kaj eĥo</div>
+   <h2>1954: reveno al Jugoslavio kaj Beogrado</h2>
+   <p class="lead">En 1954, reveninte al Jugoslavio, li ekloĝis en Beogrado, kie lin varme akceptis kaj la registaro kaj la publiko pro liaj interesaj travivaĵoj kaj homamaj mesaĝoj.</p>
+   <div class="grid">
+    <div class="card"><h3>Gazetaj artikoloj</h3><p>Multaj el liaj artikoloj aperis en gazetoj.</p></div>
+    <div class="card"><h3>Libroj en pluraj lingvoj</h3><p>Pluraj liaj libroj estis tradukitaj en la serban, slovenan, hungaran, albanan kaj la internacian lingvon Esperanto.</p></div>
+   </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide" data-title="1956–1957: Barato, Ĉinio, Nepalo">
+   <div class="kicker">1956–1957 · Azio</div>
+   <h2>Barato, Ĉinio kaj Nepalo</h2>
+   <p class="lead">En 1956 li per aŭto ekveturis al la konferenco de la Organizaĵo de Unuiĝintaj Nacioj pri Edukado, Scienco kaj Kulturo en Nov-Delhio kiel observanto de la Universala Esperanto-Asocio; post paneo de la aŭto en Teherano li daŭrigis la vojon per aŭtobuso kaj trajno.</p>
+   <div class="grid">
+    <div class="card"><h3>Renkontoj kaj tradukado</h3><p>Li parolis kun Nehruo kaj Indira Gandhi, amikiĝis kun doktoro Radhakrishna kaj en la jugoslavia ambasadejo helpis kiel tradukisto al Ljubomir Vukotić (prezidanto de la Monda Federacio de Surduloj) dum la fondo de azia oficejo kun barataj kaj ĉinaj reprezentantoj.</p></div>
+    <div class="card"><h3>Ĉinio kaj Nepalo (1957)</h3><p>En januaro 1957 li akompanis Vukotić al Ĉinio (tiam neatingebla por turistoj), poste restis ses monatojn en Nepalo. Reĝo Mahendra dankis lin pro la fondo de la unua popola universitato kaj la komenco de instruado de Esperanto.</p></div>
+   </div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide" data-title="Nepalo malfermas la pordon kaj vojaĝo tra Barato">
+   <div class="kicker">1957–1959 · Libro kaj Barato</div>
+   <h2>Nepalo malfermas la pordon kaj vojaĝo tra Barato</h2>
+   <p class="lead">La libron <i>Nepalo malfermas la pordon</i> (<i>1959</i>) li originale verkis en Esperanto dum restado en Madraso en suda Barato, kie li kombinis verkadon kun studado de joga filozofio.</p>
+   <div class="grid">
+    <div class="card"><h3>Tradukoj kaj eĥo</h3><p>La libro estis tradukita en multajn lingvojn, interalie en la anglan, serban kaj slovenan.</p></div>
+    <div class="card"><h3>De temploj al kaverno kun jogoj</h3><p>Post la verkado de la libro li denove vizitis Baraton – piede kaj parte per aŭtobuso de loko al loko kaj de templo al templo – kaj tri monatojn pasigis kun aliaj jogoj en kaverno.</p></div>
+   </div>
+  </section>
+
+  <!-- 17 -->
+  <section class="slide" data-title="1958–1960: Vinoba Bhave, Japanio, Srilanko">
+   <div class="two-book">
+    <div>
+     <div class="kicker kicker-tight">Azio · 1958–1960 · Barato, Japanio, Srilanko</div>
+     <h2 style="margin-bottom:12px">Vojaĝo tra Barato kaj renkonto kun Vinoba Bhave</h2>
+     <p style="font-size:clamp(15px,1.45vw,18px);line-height:1.45;margin-bottom:10px">Dum sia restado en Barato Tibor Sekelj detale konatiĝis kun la barata kulturo, filozofio kaj sociaj movadoj de tiu tempo.</p>
+     <p style="font-size:clamp(15px,1.45vw,18px);line-height:1.45;margin-bottom:0">Aparte grava estis lia renkonto kun Vinoba Bhave, spirita posteulo de Gandhi kaj gvidanto de la movado Bhoodan (donaco de tero al malriĉaj kamparanoj).</p>
+     <p style="font-size:clamp(15px,1.45vw,18px);line-height:1.45;margin-bottom:0">En unu sola monato Tibor instruis al li Esperanton, kio bele montris, kiom rapide eblas interkompreniĝi trans kulturaj kaj lingvaj limoj.</p>
+    </div>
+    <div class="book-media-col">
+     <div class="photo-box photo-box-book" style="width:100%;max-width:100%;margin:0 auto;padding:12px">
+      <img src="Sekelj/Vinoba_bhave.jpg" alt="Vinoba Bhave" style="width:100%;max-width:100%;max-height:70vh;height:auto;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="photo-placeholder" style="display:none">
+       <b>Bildo ne troviĝas</b>
+       <span>Kontrolu, ĉu ekzistas dosiero <code>Sekelj/Vinoba_bhave.jpg</code> rilate al tiu ĉi HTML-dosiero.</span>
+      </div>
+      <div class="caption">Vinoba Bhave</div>
+     </div>
+    </div>
+   </div>
+  </section>
+    
+  <!-- 18 -->
+  <section class="slide" data-title="1961–1963: Maroko kaj Karavano de Amikeco">
+   <div class="kicker">1961–1963 · Afriko</div>
+   <h2>Maroko kaj “Karavano de Amikeco”</h2>
+   <p class="lead">En 1961, invitite de marokaj esperantistoj, li vizitis Marokon kaj aliĝis al tuarega karavano en Saharo, intertempe estante en Beogrado.</p>
+   <div class="grid">
+    <div class="card"><h3>Karavano de Amikeco (marto 1962 – unu jaro)</h3><p>Ok homoj el kvar landoj en du terenaj aŭtoj trairis Egiption, Sudanon, Etiopion, Somalion, Kenjon kaj Tanzanion (dua planita karavano ne realiĝis).</p></div>
+    <div class="card"><h3>Kilimanĝaro kaj Ĝambo rafiki</h3><p>La celo de la vojaĝo estis rektaj homaj kontaktoj; li supreniris Kilimanĝaron kaj pri la vojaĝo verkis en Esperanto <i>Ĝambo rafiki</i>, kiu aperis unue en slovena traduko.</p></div>
+   </div>
+  </section>
+
+  <!-- 19 -->
+  <section class="slide" data-title="1965–1966: Rusio, Japanio, Mongolio, Eŭropo">
+   <div class="kicker">1965–1966 · Siberio, Mongolio kaj Eŭropo</div>
+   <h2>De Tokio kaj Mongolio ĝis Eŭropo</h2>
+   <p class="lead">En 1965 li vojaĝis al la Universala Kongreso de Esperanto en Tokio tra Moskvo, Irkutsk kaj Ĥabarovsk, per trajno ĝis Nahodka kaj per ŝipo ĝis Jokohamo.</p>
+   <div class="grid">
+    <div class="card"><h3>Tri monatoj en Mongolio</h3><p>Post monato en Japanio li survoje reen tra Siberio neplanite haltis tri monatojn en Mongolio, kio tiutempe, pro vizoj kaj permesoj, estis aparte malfacila.</p></div>
+    <div class="card"><h3>Tra Eŭropo</h3><p>En la sekvaj jaroj li vizitis preskaŭ ĉiujn eŭropajn landojn krom Albanio kaj Islando, kun speciala eĥo en Hispanio kaj la skandinavaj landoj.</p></div>
+   </div>
+  </section>
+
+  <!-- 20 -->
+  <section class="slide" data-title="1970: Aŭstralio, Nov-Zelando, Nov-Gvineo">
+   <div class="kicker">1970 · Oceanio</div>
+   <h2>Aŭstralio, Nov-Zelando kaj Nov-Gvineo</h2>
+   <p class="lead">En 1970 li flugis al Aŭstralio, Nov-Zelando kaj Nov-Gvineo, kie li restis ses monatojn, supreniris la monton Kosciuszko kaj en Nov-Gvineo renkontis popolojn kun malmultaj kontaktoj kun la ekstera mondo.</p>
+   <div class="card" style="margin-top:18px">
+    <h3>Talentoj survoje kaj pli ol 20 lingvoj</h3>
+    <p>Li sciis savi sin el multaj danĝeraj situacioj, alĝustiĝi al diversaj kutimoj kaj moroj (ankaŭ nutraj) kaj komprenigi sin en plej diversaj lingvoj – li regis pli ol dudek.</p>
+   </div>
+  </section>
+
+  <!-- 21 -->
+  <section class="slide" data-title="Papuo-Nov-Gvineo">
+   <div class="kicker">Oceanio · 1970</div>
+   <h2>Papuo-Nov-Gvineo</h2>
+   <div class="aconcagua-gallery-page" style="margin-top:12px">
+    <img src="Sekelj/Tibor_Sekelj_Papua_1.jpg" alt="Tibor Sekelj en Papuo-Nov-Gvineo" onerror="this.style.display='none';">
+    <img src="Sekelj/Tibor_Sekelj_Papua_2.jpg" alt="Tibor Sekelj en Papuo-Nov-Gvineo 2" onerror="this.style.display='none';">
+    <img src="Sekelj/Tibor_Sekelj_Papua_3.jpg" alt="Tibor Sekelj en Papuo-Nov-Gvineo 3" onerror="this.style.display='none';">
+   </div>
+   <div class="gallery-footer-label">Papuo-Nov-Gvineo</div>
+  </section>
+
+  <!-- 22 -->
+  <section class="slide" data-title="1972–1980: Nordameriko, Rusio, Uzbekio, Niĝerio, Ekvadoro">
+   <div class="kicker">1972–1980 · Internaciaj renkontiĝoj kaj ekspedicioj</div>
+   <h2>De Ĉikago kaj Leningrado ĝis Ekvadoro</h2>
+   <p class="lead">En la sepdekaj jaroj li ofte ligis la vojaĝojn kun internaciaj kongresoj de etnologoj kaj kulturaj eventoj.</p>
+   <div class="grid">
+    <div class="card"><h3>1972 · Nordameriko</h3><p>Okaze de la internacia kongreso de etnologoj en Ĉikago li vizitis orientajn regionojn de Kanado kaj Usono.</p></div>
+    <div class="card"><h3>1977 kaj 1978 · Meza Azio, Afriko kaj Ekvadoro</h3><p>En 1977, okaze de evento en Leningrado, li vojaĝis al Uzbekio kaj Meza Azio kaj ĉeestis la festivalon de nigraj kaj afrikaj kulturoj en Lagoso, Niĝerio; en 1978 li denove vizitis Sudamerikon kaj unuafoje estis en Ekvadoro kaj sur la Galapagaj Insuloj.</p></div>
+   </div>
+  </section>
+
+  <!-- 23 -->
+  <section class="slide" data-title="Kolektado de objektoj (1970)">
+   <div class="kicker">Muzeaj kolektoj</div>
+   <h2>Vojaĝanto, kiu kolektis ankaŭ objektojn</h2>
+   <p class="lead">Dum la vojaĝo tra Aŭstralio kaj Papuo-Nov-Gvineo li kolektis ampleksan kolekton de objektoj, kiuj hodiaŭ troviĝas en muzeoj en Senta, Subotico kaj Zagrebo.</p>
+   <div class="card" style="margin-top:22px">
+    <h3>Kial tio gravas?</h3>
+    <p>Liaj vojaĝoj lasis ne nur librojn kaj fotojn. Parto de la materiala kulturo, kun kiu li renkontiĝis, fariĝis parto de muzeaj kolektoj kaj hodiaŭ estas atingebla por studado.</p>
+   </div>
+   <p class="small note">La Etnografia Muzeo en Zagrebo en 2022 preparis ekspozicion “Tibor Sekelj u Okeaniji” (Tibor Sekelj en Oceanio).</p>
+  </section>
+
+  <!-- 24 -->
+  <section class="slide" data-title="Muzea kolekto">
+   <div class="kicker">Muzeaj kolektoj</div>
+   <h2>Objektoj el la kolektoj</h2>
+   <div class="aconcagua-gallery-page" style="margin-top:12px">
+    <img src="Sekelj/Zbirka_1-5.jpg" alt="Muzea kolekto – objekto 1" onerror="this.style.display='none';">
+    <img src="Sekelj/Zbirka_4-5.jpg" alt="Muzea kolekto – objekto 2" onerror="this.style.display='none';">
+    <img src="Sekelj/Zbirka_6-4.jpg" alt="Muzea kolekto – objekto 3" onerror="this.style.display='none';">
+   </div>
+   <div class="gallery-footer-label">Muzea kolekto</div>
+  </section>
+
+  <!-- 25 -->
+  <section class="slide" data-title="Esperanto: ponto inter homoj">
+   <div class="kicker">Esperanto</div>
+   <h2>Lingvo kiel ponto inter homoj</h2>
+   <p class="lead">Esperanton li lernis en 1930 en Zagrebo. En ĝi li vidis praktikan rimedon por komunikado inter homoj de malsamaj lingvoj kaj kulturoj.</p>
+   <div class="grid">
+    <div class="card"><h3>Aŭtoro en Esperanto</h3><p>Grava parto de lia literatura verkaro naskiĝis rekte en Esperanto.</p></div>
+    <div class="card"><h3>Internacia movado</h3><p>Li estis aktiva en la monda esperanta movado, prelegis, verkis kaj instigis internaciajn renkontiĝojn.</p></div>
+   </div>
+  </section>
+
+  <!-- 26 -->
+  <section class="slide" data-title="Esperanto kaj multlingveco">
+   <div class="kicker">Lingva scivolemo</div>
+   <h2>De lokaj parolmanieroj al internacia lingvo</h2>
+   <p class="lead">Sekelj ne vidis Esperanton kiel anstataŭaĵon de gepatraj kaj lokaj lingvoj, sed kiel komunan interan ligilon ĉe kontakto de malsamaj mondoj.</p>
+   <div class="grid-3">
+    <div class="card"><h3>Praktika uzo</h3><p>Ĝi ebligis pli rapidan kontakton kun interparolantoj tra la mondo sen ĉiam meti inter ilin tradukadon tra grandaj lingvoj.</p></div>
+    <div class="card"><h3>Literatura esprimo</h3><p>En Esperanto li verkis vojaĝlibrojn, prozon kaj kontribuojn por internaciaj revuoj.</p></div>
+    <div class="card"><h3>Memoro kaj komunumo</h3><p>Lia verko ankoraŭ hodiaŭ ligas esperantajn societojn, esploristojn kaj leganton.</p></div>
+   </div>
+  </section>
+
+  <!-- 27 -->
+  <section class="slide" data-title="Verkisto kaj libroj">
+   <div class="kicker">Verkisto</div>
+   <h2>Vojaĝoj, kiuj fariĝis libroj</h2>
+   <div class="books-grid">
+    <div class="book-card">
+     <img src="Sekelj/Tibor_Sekelj_Tempesta_sobre_el_Aconcagua.jpg" alt="Kovrilo de la libro Tempestad sobre el Aconcagua">
+     <div>
+      <div class="book-title">Tempestad sobre el Aconcagua</div>
+      <div class="book-sub">Ŝtormo super Aconcagua (Bonaero)</div>
+     </div>
+    </div>
+    <div class="book-card">
+     <img src="Sekelj/Tibor_Sekelj_Nepalo_malfermas_la_pordon.jpg" alt="Kovrilo de la libro Nepalo malfermas la Pordon">
+     <div>
+      <div class="book-title">Nepalo malfermas la Pordon</div>
+      <div class="book-sub">Nepalo malfermas la pordon (en Esperanto)</div>
+     </div>
+    </div>
+    <div class="book-card">
+     <img src="Sekelj/Mondo_de_travivajoj.jpg" alt="Kovrilo de la libro Mondo de travivaĵoj">
+     <div>
+      <div class="book-title">Mondo de travivajoj</div>
+      <div class="book-sub">Mondo de travivaĵoj (Edistudio)</div>
+     </div>
+    </div>
+    <div class="book-card">
+     <img src="Sekelj/kolektanto_de_cielarkoj.jpg" alt="Kovrilo de la libro Kolektanto de ĉielarkoj">
+     <div>
+      <div class="book-title">Kolektanto de ĉielarkoj</div>
+      <div class="book-sub">Kolektanto de ĉielarkoj – rakontoj kaj poemoj</div>
+     </div>
+    </div>
+    <div class="book-card">
+     <img src="Sekelj/kumeuaua2.jpg" alt="Kovrilo de la libro Kumeŭaŭa, la filo de la ĝangalo">
+     <div>
+      <div class="book-title">Kumeŭaŭa, la filo de la ĝangalo</div>
+      <div class="book-sub">Rakonto el la amazonia praarbaro</div>
+     </div>
+    </div>
+   </div>
+   <p class="small note">Liaj verkoj aperis en pluraj lingvoj – interalie en la hispana, Esperanto kaj diversaj lingvoj de la jugoslavia regiono.</p>
+  </section>
+
+  <!-- 28 -->
+  <section class="slide" data-title="Kumeŭaŭa, la filo de la ĝangalo">
+   <div class="kicker kicker-tight">Junulara aventura romano · 1979</div>
+   <h2 style="margin-bottom:10px">Kumeŭaŭa, la filo de la ĝangalo</h2>
+   <p class="lead" style="margin-bottom:10px">Originale en Esperanto (<i>Kumeŭaŭa, la filo de la ĝangalo</i>, 1979): post ŝipdetruiĝo sur la rivero Araguaia la vojaĝantoj konatiĝas kun la inĝenia brazila knabo Kumeŭaŭa, kiu konas la praarbaron kiel sian hejmon.</p>
+   <div class="grid" style="margin-top:10px;gap:12px">
+    <div class="card" style="padding:15px 18px">
+     <h3 style="margin-bottom:6px">Ĉefa mesaĝo de la libro</h3>
+     <p style="font-size:15px;line-height:1.4">Scio ne dependas de lerneja edukiĝo, homo devas respekti kaj kompreni la naturon, kaj kulturoj, en amikeco trans lingvaj kaj kulturaj limoj, riĉiĝas kaj lernas unu de la alia.</p>
+    </div>
+    <div class="card" style="padding:15px 18px">
+     <h3 style="margin-bottom:6px">Internacia sukceso kaj esenca penso</h3>
+     <p style="font-size:15px;line-height:1.4">Tradukita en multajn lingvojn (en Japanio en 1987 inter la plej bonaj junularaj verkoj). Kumeŭaŭa kiel infano de la praarbaro per sia scio pri la naturo superas plenkreskulojn el la “civilizita” socio – ĉiu homo havas valoron sendepende de kulturo.</p>
+    </div>
+   </div>
+  </section>
+
+  <!-- 29 -->
+  <section class="slide" data-title="Kumeŭaŭa (1/2): Rakonto en la praarbaro">
+   <div class="two-book">
+    <div>
+     <div class="kicker kicker-tight">Kumeŭaŭa · 1 / 2</div>
+     <h2 style="margin-bottom:12px">Rakonto kaj renkonto en la praarbaro</h2>
+     <p style="font-size:clamp(15px,1.45vw,18px);line-height:1.45;margin-bottom:10px">La rakonto okazas en la amazonia praarbaro en Brazilo. Vojaĝanta grupo dum navigado sur la rivero Araguaia suferas ŝipdetruiĝon, aŭ akcidenton kun boato. Tiam ili konatiĝas kun juna indiano Kumeŭaŭa, kiu vivas en la praarbaro kaj konas ĝin kiel sian hejmon.</p>
+     <p style="font-size:clamp(15px,1.45vw,18px);line-height:1.45;margin-bottom:10px">Kumeŭaŭa estas komence stranga knabo por la alvenintoj, sed li rapide montras, ke li estas eksterordinare lerta, inĝenia kaj saĝa. Dum la vojaĝantoj sentas sin necertaj en nekonata medio, por li la praarbaro estas tute hejma mondo. Li konas ĝiajn vojojn, plantojn, bestojn kaj danĝerojn.</p>
+     <p style="font-size:clamp(15px,1.45vw,18px);line-height:1.45;margin-bottom:0">La knabo iom post iom malkaŝas al la vojaĝantoj la sekretojn de la praarbaro. Li montras al ili, kiel orientiĝi en la naturo, kiel rekoni danĝerojn, kiel uzi naturajn rimedojn kaj kiel travivi en medio, kie oni ne povas kalkuli je la komforto de moderna civilizo.</p>
+    </div>
+    <div class="book-media-col">
+     <div class="photo-box photo-box-book" style="width:100%;max-width:100%;margin:0 auto;padding:12px">
+      <img src="Sekelj/Kumevava.jpg" alt="Kumeŭaŭa" style="width:100%;max-width:100%;max-height:none;height:auto;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="photo-placeholder" style="display:none">
+       <b>Bildo ne troviĝas</b>
+       <span>Kontrolu, ĉu ekzistas dosiero <code>Sekelj/Kumevava.jpg</code> rilate al tiu ĉi HTML-dosiero.</span>
+      </div>
+      <div class="caption">Kumeŭaŭa</div>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- 30 -->
+  <section class="slide" data-title="Kumeŭaŭa (2/2): Amikeco kaj mesaĝo">
+   <div class="kicker kicker-tight">Kumeŭaŭa · 2 / 2</div>
+   <h2 style="margin-bottom:10px">Aventuroj kaj ĉefa mesaĝo de la libro</h2>
+   <p style="font-size:clamp(15px,1.4vw,17.5px);line-height:1.42;margin-bottom:8px">Tra la aventuroj ili ekkomprenas, ke la praarbaro ne estas nur bela kaj riĉa mondo, sed ankaŭ neantaŭvidebla kaj danĝera medio. Kumeŭaŭa montriĝas elstara konanto de la naturo, kiu per sia scio ofte helpas ankaŭ plenkreskulojn.</p>
+   <p style="font-size:clamp(15px,1.4vw,17.5px);line-height:1.42;margin-bottom:10px">Samtempe inter li kaj la vojaĝantoj evoluas amika rilato. Ilia renkonto fariĝas ankaŭ okazo por koni alian vivmanieron, kulturon kaj valorojn de la indiĝenaj loĝantoj.</p>
+   <div class="card" style="padding:14px 18px">
+    <h3 style="margin-bottom:6px">Ĉefa mesaĝo de la libro</h3>
+    <p style="font-size:15px;line-height:1.4;margin-bottom:6px">La libro superas la kadron de ordinara aventura romano. Per ĝi Sekelj atentigas pri kelkaj gravaj ekkonoj:</p>
+    <ul style="margin:4px 0 0;padding-left:20px;font-size:14.5px;line-height:1.42;color:#dce3eb">
+     <li>Scio ne dependas de lerneja edukiĝo. Kumeŭaŭa havas scion, kiun la plenkreskaj vizitantoj de la praarbaro ne havas.</li>
+     <li>Homo devas respekti la naturon. Por travivi necesas kompreni la naturon, ne batali kontraŭ ĝi.</li>
+     <li>Malsamaj kulturoj povas multon lerni unu de la alia. Ne nepre la vivmaniero de la civilizita homo estas la sola aŭ plej bona.</li>
+     <li>Amikeco superas kulturajn kaj lingvajn diferencojn.</li>
+    </ul>
+   </div>
+  </section>
+
+  <!-- 31 -->
+  <section class="slide" data-title="Muzea fakulo">
+   <div class="kicker">Muzea fakulo</div>
+   <h2>De esploristo al direktoro de muzeo</h2>
+   <p class="lead">En 1972 li fariĝis direktoro de la Urba Muzeo en Subotico. Interesis lin, kiel muzeoj prezentu malsamajn kulturojn kaj kiel ili povas kontribui al pli bona interkompreno inter homoj.</p>
+   <div class="card">
+    <div class="big-number">1976</div>
+    <h3>Magistra verko pri la estonteco de etnografiaj muzeoj</h3>
+    <p>Lia verko titoliĝis <i>Etnografski muzeji za budućnost</i> – muzeoj ne estu nur deponejoj de objektoj, sed spaco de kompreno de kulturoj.</p>
+   </div>
+  </section>
+
+  <!-- 32 -->
+  <section class="slide" data-title="Lia rigardo al la mondo">
+   <div class="kicker">Lia rigardo al la mondo</div>
+   <div class="quote">“Fakte la diferencoj inter ni estas nur surfacaj.”<small>Pensoj de Tibor Sekelj, resumitaj laŭ lia skribaĵo en la portalo Putnici</small></div>
+   <p class="lead" style="margin-top:30px">La vojaĝoj por li ne estis nur movado de loko al loko. Li volis kompreni homojn – iliajn kutimojn, pensmanieron kaj vivmanieron.</p>
+  </section>
+
+  <!-- 33 -->
+  <section class="slide" data-title="Konkludo">
+   <div class="kicker">Konkludo</div>
+   <h2>Kial ni ankoraŭ memoras lin?</h2>
+   <p class="lead">Ĉar li kunigis aventuron, esploradon, verkadon, intereson pri aliaj kulturoj kaj konvikton, ke homoj povas interkomprenigi sin trans lingvaj limoj.</p>
+   <div class="grid">
+    <div class="card"><h3>Esploristo</h3><p>Li serĉis la nekonaton kaj direktiĝis for de la kutimaj vojoj.</p></div>
+    <div class="card"><h3>Verkisto</h3><p>La travivaĵojn li transformis en librojn, kiuj atingis leganton en multaj lingvoj.</p></div>
+    <div class="card"><h3>Esperantisto</h3><p>Li kredis je internacia komunikado kaj amikeco.</p></div>
+    <div class="card"><h3>Muzea fakulo</h3><p>Li zorgis, ke objektoj kaj rakontoj de malsamaj kulturoj restu konservitaj.</p></div>
+   </div>
+   <p class="small note">Tibor Sekelj · 14-a de februaro 1912 – 20-a de septembro 1988 (laŭ fontoj la dato de morto ie malsamas).</p>
+  </section>
+
+  <!-- 34 -->
+  <section class="slide" data-title="Videoj por la prelego">
+   <div class="kicker kicker-tight">Videoj por la prelego</div>
+   <h2 style="margin-bottom:12px">Lasu paroli ankaŭ la bildon</h2>
+   <p class="lead" style="margin-bottom:8px">Mallongaj eltiraĵoj por la prelego.</p>
+   <div class="video-stack">
+    <div class="card card-video links">
+     <h3>1 · Arkiva filmo – Aconcagua</h3>
+     <p><a href="https://www.youtube.com/watch?v=O83rYrntlbU" target="_blank" rel="noopener">Malfermi la filmon en YouTube</a></p>
+    </div>
+    <div class="card card-video links">
+     <h3>2 · Spomenka Štimec pri Tibor Sekelj</h3>
+     <p><a href="https://vimeo.com/36402930" target="_blank" rel="noopener">Malfermi la prelegon en Vimeo</a> · <span class="small">Prelego en Esperanto.</span></p>
+    </div>
+    <div class="card card-video links">
+     <h3>3 · Srdačno vaši - Tibor Sekelj - (Televizio Zagrebo, 1984)</h3>
+     <p><a href="https://www.youtube.com/watch?v=7NyrL_t7-tY" target="_blank" rel="noopener">1-a parto (YouTube)</a>, <a href="https://www.youtube.com/watch?v=82AYdRy9sAs" target="_blank" rel="noopener">2-a parto (YouTube)</a>  </p>
+    </div>
+    <div class="card card-video links">
+     <h3>4 · Plia filmo</h3>
+     <p><a href="https://www.youtube.com/watch?v=ZcS2G768s4E" target="_blank" rel="noopener">Malfermi la filmon en YouTube</a></p>
+    </div>
+   </div>
+  <p class="small note" style="margin-top:14px">Kreita per Gemini, kontrolita kaj kompletigita per Claude Sonnet 5.5</p>
+  </section>
+ </main>
+
+ <footer class="footer">
+  <div class="controls">
+   <button id="prev" aria-label="Antaŭa lumbildo">← Reen</button>
+   <button id="next" class="primary" aria-label="Sekva lumbildo">Antaŭen →</button>
+   <button id="tocBtn" aria-label="Enhavtabelo de lumbildoj">☰ Enhavo</button>
+   <button id="full" aria-label="Plenekrana reĝimo">⛶ Plenekrane</button>
+  </div>
+  <div class="dots" id="dots" aria-label="Elekto de lumbildo"></div>
+  <div class="counter" id="counter">1 / 34</div>
+  <div class="shortcuts">←/→ · G enhavo · F plena ekrano</div>
+ </footer>
+</div>
+
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+ <div class="drawer-panel">
+  <div class="drawer-head">
+   <h3 id="drawerTitle">Enhavtabelo de lumbildoj</h3>
+   <button id="closeDrawer" aria-label="Fermi la enhavtabelon">✕ Fermi</button>
+  </div>
+  <div class="toc-list" id="tocList"></div>
+ </div>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+const tocList=document.getElementById('tocList');
+const drawer=document.getElementById('drawer');
+let current=0;
+
+slides.forEach((s,i)=>{
+ const title=s.dataset.title||('Lumbildo '+(i+1));
+ const b=document.createElement('button');
+ b.className='dot'+(i===0?' active':'');
+ b.title=(i+1)+'. '+title;
+ b.setAttribute('aria-label',(i+1)+'. '+title);
+ b.onclick=()=>show(i);
+ dotsBox.appendChild(b);
+
+ const item=document.createElement('button');
+ item.className='toc-item'+(i===0?' active':'');
+ item.innerHTML='<b>'+(i+1)+'</b><span>'+title+'</span>';
+ item.onclick=()=>{show(i);closeDrawer();};
+ tocList.appendChild(item);
+});
+
+const dots=[...dotsBox.children];
+const tocItems=[...tocList.children];
+
+function show(i){
+ current=Math.max(0,Math.min(slides.length-1,i));
+ slides.forEach((s,n)=>s.classList.toggle('active',n===current));
+ dots.forEach((d,n)=>d.classList.toggle('active',n===current));
+ tocItems.forEach((t,n)=>t.classList.toggle('active',n===current));
+ document.getElementById('counter').textContent=(current+1)+' / '+slides.length;
+ document.getElementById('progress').style.width=((current+1)/slides.length*100)+'%';
+ document.getElementById('prev').disabled=current===0;
+ document.getElementById('next').disabled=current===slides.length-1;
+ document.getElementById('stage').scrollTop=0;
+}
+
+function openDrawer(){drawer.classList.add('open');document.getElementById('closeDrawer').focus();}
+function closeDrawer(){drawer.classList.remove('open');}
+
+document.getElementById('prev').onclick=()=>show(current-1);
+document.getElementById('next').onclick=()=>show(current+1);
+document.getElementById('tocBtn').onclick=openDrawer;
+document.getElementById('closeDrawer').onclick=closeDrawer;
+drawer.onclick=e=>{if(e.target===drawer)closeDrawer();};
+document.getElementById('full').onclick=()=>{
+ if(!document.fullscreenElement){document.documentElement.requestFullscreen?.();}
+ else{document.exitFullscreen?.();}
+};
+
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&drawer.classList.contains('open')){closeDrawer();return;}
+ if(drawer.classList.contains('open'))return;
+ if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(current+1);}
+ else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(current-1);}
+ else if(e.key==='Home'){e.preventDefault();show(0);}
+ else if(e.key==='End'){e.preventDefault();show(slides.length-1);}
+ else if(e.key.toLowerCase()==='g'){e.preventDefault();openDrawer();}
+ else if(e.key.toLowerCase()==='f'){e.preventDefault();document.getElementById('full').click();}
+});
+
+show(0);
+</script>
+</body>
+</html>
