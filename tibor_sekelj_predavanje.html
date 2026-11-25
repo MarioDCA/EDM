@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tibor Sekelj – človek, ki ga je gnala radovednost</title>
+<style>
+:root{--bg:#101b2b;--panel:#18283d;--cream:#f5f0e6;--muted:#b9c4d2;--orange:#f0a34a;--teal:#6fc2b3;--line:rgba(255,255,255,.14)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--cream);font-family:Arial,Helvetica,sans-serif}
+body{overflow:hidden}
+.deck{height:100%;display:flex;flex-direction:column}
+.top{height:7px;background:#26384e;flex:none}
+.progress{height:7px;width:0;background:var(--orange);transition:width .25s}
+.stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:clamp(18px,4vw,58px);overflow:auto}
+.slide{display:none;width:min(1120px,100%);min-height:min(650px,100%);animation:fade .25s ease}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+@keyframes fade{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:none}}
+.kicker{color:var(--teal);text-transform:uppercase;letter-spacing:.18em;font-size:clamp(11px,1vw,14px);font-weight:bold;margin-bottom:18px}
+h1{font-size:clamp(42px,7vw,86px);line-height:.98;letter-spacing:-.045em;margin:0 0 22px;max-width:900px}
+h2{font-size:clamp(30px,4.3vw,54px);line-height:1.05;letter-spacing:-.03em;margin:0 0 25px}
+h3{font-size:clamp(18px,2vw,24px);margin:0 0 10px;color:var(--orange)}
+p{font-size:clamp(17px,1.7vw,22px);line-height:1.48;color:#e7eaf0;margin:0 0 15px;max-width:850px}
+.lead{font-size:clamp(21px,2.3vw,30px);line-height:1.38;color:#fff;max-width:850px}
+.small{font-size:14px;color:var(--muted);line-height:1.45}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+.card p{font-size:clamp(15px,1.35vw,19px);margin:0;color:#dce3eb}
+.big-number{font-size:clamp(34px,5vw,58px);font-weight:800;color:var(--orange);line-height:1}
+.pill{display:inline-block;border:1px solid rgba(111,194,179,.55);color:var(--teal);padding:7px 11px;border-radius:30px;font-size:13px;margin:5px 6px 0 0}
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center}
+.portrait{width:min(100%,330px);max-height:430px;object-fit:cover;object-position:center;border-radius:18px;border:1px solid var(--line);filter:grayscale(100%)}
+.caption{font-size:12px;color:var(--muted);margin-top:8px}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:25px}
+.time{border-top:3px solid var(--orange);padding:14px 12px 0;background:rgba(255,255,255,.035);border-radius:0 0 12px 12px}
+.time b{font-size:24px;color:var(--orange);display:block;margin-bottom:7px}
+.time span{font-size:15px;line-height:1.4;color:#dce3eb}
+.quote{font-size:clamp(25px,3.5vw,42px);line-height:1.25;max-width:900px;color:#fff;border-left:5px solid var(--orange);padding-left:25px}
+.quote small{display:block;font-size:15px;color:var(--muted);margin-top:20px}
+.links a{color:#ffd08f;text-decoration:underline;text-underline-offset:3px}
+.links li{font-size:clamp(16px,1.6vw,20px);line-height:1.5;margin:9px 0;color:#e7eaf0}
+ul{padding-left:23px;margin:8px 0}
+.note{margin-top:20px}
+details{margin-top:22px;background:rgba(255,255,255,.055);border:1px solid var(--line);border-radius:12px;padding:12px 15px;max-width:900px}
+summary{cursor:pointer;color:var(--teal);font-weight:bold;font-size:14px}
+details p{font-size:15px;margin:10px 0 0;color:#cbd5df}
+.footer{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-top:1px solid var(--line);flex:none}
+.controls{display:flex;gap:8px;align-items:center}
+button{background:#24364d;border:1px solid var(--line);color:var(--cream);padding:10px 15px;border-radius:10px;cursor:pointer;font-size:14px}
+button:hover{background:#304761}
+button.primary{background:var(--orange);color:#172235;border-color:var(--orange);font-weight:bold}
+.counter{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px;min-width:65px;text-align:center}
+.dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.dot{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:#526277}
+.dot.active{background:var(--orange);transform:scale(1.4)}
+@media(max-width:700px){
+ .stage{align-items:flex-start;padding:22px 18px}
+ .slide{min-height:0}
+ .grid,.two{grid-template-columns:1fr}
+ .timeline{grid-template-columns:repeat(2,1fr)}
+ .portrait{width:160px;max-height:210px}
+ .footer{height:auto;min-height:62px;padding:10px;gap:8px;flex-wrap:wrap}
+ .dots{order:3;width:100%}
+}
+@media print{
+ html,body{height:auto;overflow:visible;background:white;color:#111}
+ .deck{height:auto}.top,.footer,details{display:none!important}
+ .stage{display:block;padding:0;overflow:visible}
+ .slide,.slide.active{display:flex!important;min-height:95vh;page-break-after:always;background:#101b2b;color:white;padding:35px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+ <div class="top"><div class="progress" id="progress"></div></div>
+ <main class="stage" id="stage">
+  <section class="slide active">
+   <div class="kicker">Življenje na poti · 1912–1988</div>
+   <h1>Tibor<br>Sekelj</h1>
+   <p class="lead">Človek, ki ga je gnala radovednost – raziskovalec, pisatelj, popotnik in esperantist.</p>
+   <div style="margin-top:28px"><span class="pill">Južna Amerika</span><span class="pill">Aconcagua</span><span class="pill">Amazonija</span><span class="pill">Esperanto</span></div>
+   <details><summary>Opomba za predavatelja</summary><p>Začni z vprašanjem: Koliko ljudi poznamo, ki so bili hkrati alpinisti, raziskovalci, pisatelji, muzealci in zagovorniki mednarodnega jezika?</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Kdo je bil?</div>
+   <div class="two">
+    <div>
+     <h2>Več kot popotnik</h2>
+     <p class="lead">Tibor Sekelj (1912–1988) je bil novinar, raziskovalec, etnograf, pisatelj, muzealec in eden vidnejših esperantistov svojega časa.</p>
+     <p>Rodil se je v Spišski Soboti na današnjem Slovaškem. Otroštvo je preživel v različnih krajih, študiral pravo v Zagrebu, vendar ga je bolj kot pravniški poklic privlačil svet.</p>
+    </div>
+    <div>
+     <img class="portrait" src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Tibor_Sekelj_1983.jpg" alt="Portret Tibora Sekelja iz leta 1983">
+     <div class="caption">Tibor Sekelj leta 1983 · fotografija Ivan Špoljarec · Wikimedia Commons, CC BY-SA 3.0</div>
+    </div>
+   </div>
+   <details><summary>Opomba za predavatelja</summary><p>Njegova življenjska pot ni bila vezana na eno državo. Rodil se je na območju današnje Slovaške, šolal se je v več krajih, študiral v Zagrebu, dolgo živel v Južni Ameriki, pozneje pa deloval v Jugoslaviji.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Začetek poti</div>
+   <h2>Leta 1939: odhod v Argentino</h2>
+   <p class="lead">V Buenos Aires je odšel kot novinar. Tam je ostal približno petnajst let – in njegovo življenje se je spremenilo v niz odprav, raziskovanj in knjig.</p>
+   <div class="grid">
+    <div class="card"><div class="big-number">1939</div><h3>Buenos Aires</h3><p>Novinarsko delo in študij etnologije ter arheologije.</p></div>
+    <div class="card"><div class="big-number">15</div><h3>Let v Južni Ameriki</h3><p>Potovanja po Argentini, Braziliji, Boliviji in drugih državah celine.</p></div>
+   </div>
+   <details><summary>Opomba za predavatelja</summary><p>Sekelj je v Argentino odšel tik pred začetkom druge svetovne vojne. Načrtovan novinarski odhod se je spremenil v dolgo obdobje raziskovanja in potovanj.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Gore in preizkušnje</div>
+   <h2>Aconcagua – gora, ki je zaznamovala njegovo življenje</h2>
+   <p class="lead">Leta 1944 se je pridružil odpravi na Aconcaguo, najvišji vrh Južne Amerike. Odpravo je zajela huda snežna nevihta; več članov je izgubilo življenje.</p>
+   <div class="grid">
+    <div class="card"><div class="big-number">6.961 m</div><h3>Aconcagua</h3><p>Najvišji vrh Južne Amerike, v argentinskih Andih.</p></div>
+    <div class="card"><h3>Izkušnja, ki je postala knjiga</h3><p>Sekelj je doživetje opisal v knjigi <i>Vihar nad Aconcaguo</i>, ki je postala eno njegovih najbolj znanih del.</p></div>
+   </div>
+   <details><summary>Opomba za predavatelja</summary><p>Ne predstavljaj odprave kot lahkotne pustolovščine. Sekeljeva pripoved je tudi zgodba o nevarnosti, izgubi in vztrajnosti. Za predvajanje arhivskega posnetka najprej preveri, ali je posnetek dejansko dostopen in kaj prikazuje.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Amazonija in Brazilija</div>
+   <h2>Ne samo gore – tudi življenje v pragozdu</h2>
+   <p class="lead">Sekelj je raziskoval odročne dele Južne Amerike in se srečeval z domorodnimi skupnostmi, med drugim v Braziliji.</p>
+   <div class="grid">
+    <div class="card"><h3>Raziskovanje</h3><p>Potoval je po območjih Mato Grossa, bolivijskih gozdovih in amazonskem svetu.</p></div>
+    <div class="card"><h3>Srečanja in opazovanje</h3><p>Zanimalo ga je vsakdanje življenje, običaji in načini preživetja ljudi, ki jih je srečeval.</p></div>
+   </div>
+   <p class="small note">Njegove izkušnje so navdihnile več potopisnih in mladinskih knjig.</p>
+   <details><summary>Opomba za predavatelja</summary><p>Pri pripovedovanju uporabljaj spoštljiv izraz »domorodne skupnosti«. Sekeljeve knjige so nastale v času, ko so bili opisi teh skupnosti pogosto obarvani z drugačnimi predstavami kot danes; smiselno je ločiti njegove osebne vtise od sodobne antropološke razlage.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Svetovni popotnik</div>
+   <h2>Po vrnitvi se potovanja niso končala</h2>
+   <p class="lead">Leta 1954 se je vrnil v Jugoslavijo, vendar je še naprej potoval po Aziji, Afriki in Oceaniji.</p>
+   <div class="timeline">
+    <div class="time"><b>1950-a</b><span>Indija, Nepal, Japonska in druga območja Azije</span></div>
+    <div class="time"><b>1962</b><span>Veliko potovanje po Afriki</span></div>
+    <div class="time"><b>1970</b><span>Avstralija in Papua Nova Gvineja</span></div>
+    <div class="time"><b>1978</b><span>Ponovna potovanja po Južni Ameriki</span></div>
+   </div>
+   <details><summary>Opomba za predavatelja</summary><p>Letnice so orientacijske in ne pomenijo, da je bila to njegova edina pot v posamezno območje. Pri Avstraliji in Papui Novi Gvineji je posebej zanimivo, da je zbiral tudi predmete, ki so pozneje prišli v muzejske zbirke.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Leto 1970</div>
+   <h2>Popotnik, ki je zbiral tudi predmete</h2>
+   <p class="lead">Na potovanju po Avstraliji in Papui Novi Gvineji je zbral obsežno zbirko predmetov, ki se danes hranijo v muzejih v Senti, Subotici in Zagrebu.</p>
+   <div class="card" style="margin-top:22px">
+    <h3>Zakaj je to pomembno?</h3>
+    <p>Njegova potovanja niso pustila le knjig in fotografij. Del materialne kulture, s katero se je srečal, je postal del muzejskih zbirk in je danes dostopen za proučevanje.</p>
+   </div>
+   <p class="small note">Etnografski muzej v Zagrebu je leta 2022 pripravil razstavo »Tibor Sekelj u Okeaniji«.</p>
+   <details><summary>Opomba za predavatelja</summary><p>To je dober trenutek za pokazati fotografijo predmeta ali muzejske zbirke. Poudari, da je zbiranje predmetov danes treba razumeti tudi v kontekstu vprašanj lastništva, okoliščin pridobitve in spoštovanja skupnosti izvora.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Esperanto</div>
+   <h2>Jezik kot most med ljudmi</h2>
+   <p class="lead">Esperanto se je naučil leta 1930 v Zagrebu. V njem je videl praktično sredstvo za sporazumevanje med ljudmi različnih jezikov in kultur.</p>
+   <div class="grid">
+    <div class="card"><h3>Avtor v esperantu</h3><p>Pomemben del njegovega literarnega opusa je nastal neposredno v esperantu.</p></div>
+    <div class="card"><h3>Mednarodno gibanje</h3><p>Bil je dejaven v svetovnem esperantskem gibanju, predaval, pisal in spodbujal mednarodna srečanja.</p></div>
+   </div>
+   <details><summary>Opomba za predavatelja</summary><p>Po podatku, predstavljenem na okrogli mizi v Mariboru ob njegovi 100. obletnici rojstva, je bila približno tretjina njegovih del prvotno napisana v esperantu. To je posebej zanimivo za esperantsko občinstvo.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Pisatelj</div>
+   <h2>Potovanja, ki so postala knjige</h2>
+   <div class="grid">
+    <div class="card"><h3>Vihar nad Aconcaguo</h3><p>Doživetja z alpinistične odprave in boj z gorsko nevihto.</p></div>
+    <div class="card"><h3>Daleč od civilizacije</h3><p>Življenje skupnosti ob Amazonki in v pragozdu.</p></div>
+    <div class="card"><h3>Nepal odpira vrata</h3><p>Potopis iz Azije in srečanja na poti.</p></div>
+    <div class="card"><h3>Djambo rafiki</h3><p>Karavana prijateljstva po Afriki.</p></div>
+   </div>
+   <p class="small note">Njegove knjige so izhajale v več jezikih; več del je bilo prevedenih tudi v slovenščino.</p>
+   <details><summary>Opomba za predavatelja</summary><p>Če imaš katero od knjig pri roki, jo pokaži občinstvu. Naslovi v slovenščini se lahko razlikujejo glede na izdajo in prevod.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Muzealec</div>
+   <h2>Od raziskovalca do direktorja muzeja</h2>
+   <p class="lead">Leta 1972 je postal direktor Mestnega muzeja v Subotici. Zanimalo ga je, kako naj muzeji predstavljajo različne kulture in kako lahko prispevajo k boljšemu razumevanju med ljudmi.</p>
+   <div class="card">
+    <div class="big-number">1976</div>
+    <h3>Magistrsko delo o prihodnosti etnografskih muzejev</h3>
+    <p>Njegovo delo je nosilo naslov <i>Etnografski muzeji za budućnost</i> – muzeji naj ne bodo zgolj skladišča predmetov, temveč prostor razumevanja kultur.</p>
+   </div>
+   <details><summary>Opomba za predavatelja</summary><p>Ta del pokaže, da Sekelj ni bil samo pustolovec. Razmišljal je tudi o tem, kako znanje in predmete predstaviti javnosti.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Njegov pogled na svet</div>
+   <div class="quote">»V resnici so razlike med nami le površinske.«<small>Misli Tibora Sekelja, povzeto po njegovem zapisu na portalu Putnici</small></div>
+   <p class="lead" style="margin-top:30px">Potovanja zanj niso bila samo premikanje iz kraja v kraj. Želel je razumeti ljudi – njihove navade, razmišljanje in način življenja.</p>
+   <details><summary>Opomba za predavatelja</summary><p>To je lahko sklepni poudarek predavanja: njegova radovednost ni bila usmerjena le v kraje, ampak predvsem v ljudi.</p></details>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Video za predavanje</div>
+   <h2>Naj spregovori tudi slika</h2>
+   <p class="lead">Za predavanje priporočam kratek odlomek ali dva. Povezave odpri in preveri vnaprej, saj se dostopnost posnetkov lahko spremeni.</p>
+   <div class="card links">
+    <h3>1 · Arhivski posnetek – Aconcagua</h3>
+    <p><a href="https://www.youtube.com/watch?v=O83rYrntlbU" target="_blank" rel="noopener">Preveri posnetek na YouTubu</a></p>
+    <p class="small">Pred uporabo preveri, ali povezava deluje in ali je na posnetku res Sekelj osebno.</p>
+   </div>
+   <div class="card links" style="margin-top:13px">
+    <h3>2 · Spomenka Štimec o Tiboru Sekelju</h3>
+    <p><a href="https://vimeo.com/36402930" target="_blank" rel="noopener">Odpri predavanje na Vimeu</a></p>
+    <p class="small">Predavanje v esperantu; uporabno za dodatno ozadje.</p>
+   </div>
+   <div class="card links" style="margin-top:13px">
+    <h3>3 · Dokumentarni film Putevima Tibora Sekelja</h3>
+    <p><a href="https://www.fcs.rs/en/movies/putevima-tibora-sekelja/" target="_blank" rel="noopener">Podatki o filmu</a></p>
+    <p class="small">Dokumentarni film iz leta 2012; stran vsebuje podatke o filmu, ne nujno povezave za ogled.</p>
+   </div>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Zaključek</div>
+   <h2>Zakaj se ga še spominjamo?</h2>
+   <p class="lead">Ker je združil pustolovščino, raziskovanje, pisanje, zanimanje za druge kulture in prepričanje, da se ljudje lahko sporazumevamo onkraj jezikovnih meja.</p>
+   <div class="grid">
+    <div class="card"><h3>Raziskovalec</h3><p>Iskal je neznano in se odpravljal daleč od ustaljenih poti.</p></div>
+    <div class="card"><h3>Pisatelj</h3><p>Doživetja je spremenil v knjige, ki so dosegle bralce v številnih jezikih.</p></div>
+    <div class="card"><h3>Esperantist</h3><p>Verjel je v mednarodno sporazumevanje in prijateljstvo.</p></div>
+    <div class="card"><h3>Muzealec</h3><p>Skrbel je, da predmeti in zgodbe različnih kultur ostanejo ohranjeni.</p></div>
+   </div>
+   <p class="small note">Tibor Sekelj · 14. februar 1912 – 20. september 1988 (v virih se datum smrti ponekod razlikuje).</p>
+  </section>
+
+  <section class="slide">
+   <div class="kicker">Viri in nadaljnje branje</div>
+   <h2>Viri</h2>
+   <ul class="links">
+    <li><a href="https://www.enciklopedija.hr/clanak/sekelj-tibor" target="_blank" rel="noopener">Hrvatska enciklopedija – Tibor Sekelj</a></li>
+    <li><a href="https://putnici.emz.hr/donatori/tibor-sekelj/" target="_blank" rel="noopener">Etnografski muzej Zagreb – Tibor Sekelj</a></li>
+    <li><a href="https://esperanto.si/sl/okrogla-miza-o-tiboru-sekelju-v-mariboru" target="_blank" rel="noopener">Okrogla miza o Tiboru Sekelju v Mariboru (2012)</a></li>
+    <li><a href="https://emz.hr/izlozbe/tibor-sekelj-u-okeaniji/" target="_blank" rel="noopener">Etnografski muzej Zagreb – Tibor Sekelj u Okeaniji</a></li>
+    <li><a href="https://commons.wikimedia.org/wiki/File:Tibor_Sekelj_1983.jpg" target="_blank" rel="noopener">Portret iz leta 1983 – Wikimedia Commons</a></li>
+   </ul>
+   <p class="small">Predstavitev je izhodišče za predavanje. Pri navajanju posameznih podrobnosti daj prednost muzejskim in enciklopedičnim virom; pri datumih se v nekaterih virih pojavljajo manjša odstopanja.</p>
+  </section>
+ </main>
+ <footer class="footer">
+  <div class="controls">
+   <button id="prev" aria-label="Prejšnji diapozitiv">← Nazaj</button>
+   <button id="next" class="primary" aria-label="Naslednji diapozitiv">Naprej →</button>
+   <button id="full" aria-label="Celozaslonski način">⛶ Celozaslonsko</button>
+  </div>
+  <div class="dots" id="dots" aria-label="Izbira diapozitiva"></div>
+  <div class="counter" id="counter">1 / 14</div>
+ </footer>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let current=0;
+slides.forEach((s,i)=>{const b=document.createElement('button');b.className='dot'+(i===0?' active':'');b.title='Diapozitiv '+(i+1);b.setAttribute('aria-label','Diapozitiv '+(i+1));b.onclick=()=>show(i);dotsBox.appendChild(b)});
+const dots=[...dotsBox.children];
+function show(i){current=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,n)=>s.classList.toggle('active',n===current));dots.forEach((d,n)=>d.classList.toggle('active',n===current));document.getElementById('counter').textContent=(current+1)+' / '+slides.length;document.getElementById('progress').style.width=((current+1)/slides.length*100)+'%';document.getElementById('prev').disabled=current===0;document.getElementById('next').disabled=current===slides.length-1;}
+document.getElementById('prev').onclick=()=>show(current-1);
+document.getElementById('next').onclick=()=>show(current+1);
+document.getElementById('full').onclick=()=>{if(!document.fullscreenElement){document.documentElement.requestFullscreen?.()}else{document.exitFullscreen?.()}};
+document.addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(current+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(current-1)}if(e.key==='Home')show(0);if(e.key==='End')show(slides.length-1)});
+show(0);
+</script>
+</body>
+</html>
