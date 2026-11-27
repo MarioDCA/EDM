@@ -36,8 +36,21 @@ p{font-size:clamp(17px,1.7vw,22px);line-height:1.48;color:#e7eaf0;margin:0 0 15p
 .two-aconcagua{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center}
 .two-book{display:grid;grid-template-columns:1.12fr .88fr;gap:28px;align-items:stretch}
 .book-media-col{display:flex;flex-direction:column;justify-content:flex-end}
-.aconcagua-gallery-page{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%}
-.aconcagua-gallery-page img{width:100%;height:260px;object-fit:cover;background:#0c1420;border-radius:14px;border:1px solid var(--line)}
+.aconcagua-gallery-page {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+.aconcagua-gallery-page img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    background: #0c1420;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+}
 .buenos-gallery-page{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%}
 .buenos-gallery-page img{width:100%;height:265px;object-fit:cover;background:#0c1420;border-radius:14px;border:1px solid var(--line)}
 .gallery-footer-label{text-align:center;margin-top:16px;font-size:clamp(16px,1.5vw,20px);color:var(--muted);letter-spacing:.04em}
@@ -488,16 +501,16 @@ button.primary{background:var(--orange);color:#172235;border-color:var(--orange)
   </section>
 
   <!-- 24 -->
-  <section class="slide" data-title="Muzea kolekto">
-   <div class="kicker">Muzeaj kolektoj</div>
-   <h2>Objektoj el la kolektoj</h2>
-   <div class="aconcagua-gallery-page" style="margin-top:12px">
+<section class="slide" data-title="Muzea kolekto">
+  <div class="kicker">Muzeaj kolektoj</div>
+  <h2>Objektoj el la kolektoj</h2>
+  <div class="aconcagua-gallery-page" style="margin-top:8px; gap:8px;">
     <img src="Sekelj/Zbirka_1-5.jpg" alt="Muzea kolekto – objekto 1" onerror="this.style.display='none';">
     <img src="Sekelj/Zbirka_4-5.jpg" alt="Muzea kolekto – objekto 2" onerror="this.style.display='none';">
     <img src="Sekelj/Zbirka_6-4.jpg" alt="Muzea kolekto – objekto 3" onerror="this.style.display='none';">
-   </div>
-   <div class="gallery-footer-label">Muzea kolekto</div>
-  </section>
+  </div>
+  <div class="gallery-footer-label">Muzea kolekto</div>
+</section>
 
   <!-- 25 -->
   <section class="slide" data-title="Esperanto: ponto inter homoj">
